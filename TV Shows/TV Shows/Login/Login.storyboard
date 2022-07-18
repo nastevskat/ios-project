@@ -33,7 +33,7 @@
                                     <fontDescription key="titleFontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="41"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="btn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Pai-hb-Ird"/>
+                                    <action selector="buttonPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="8CE-8C-J2Q"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lCh-NS-W3b">
@@ -57,7 +57,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnOutlet" destination="Xa4-3Q-GsH" id="nWl-iY-RKL"/>
+                        <outlet property="btnOutlet" destination="Xa4-3Q-GsH" id="Xkp-jv-Qib"/>
                         <outlet property="hello" destination="lCh-NS-W3b" id="tGF-8T-87D"/>
                     </connections>
                 </viewController>
