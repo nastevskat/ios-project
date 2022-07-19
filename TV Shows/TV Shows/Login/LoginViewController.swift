@@ -16,10 +16,10 @@ final class LoginViewController: UIViewController {
     @IBOutlet weak var btnOutlet: UIButton!
     @IBOutlet weak var hello: UILabel!
     
-    
-    @IBAction func buttonPressed() {
+    @IBAction private func buttonPressed() {
         taps += 1
         hello.text = String(taps)
+        
     }
     
     
