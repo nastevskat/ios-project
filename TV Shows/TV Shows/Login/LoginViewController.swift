@@ -32,6 +32,13 @@ class LoginViewController: UIViewController{
        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 13.0, *){
+            navigationController?.navigationBar.setNeedsLayout()  //koga kreiram navigation controller mi se izmestuva login layoutot
+        }
+    }
+    
     
 }
 

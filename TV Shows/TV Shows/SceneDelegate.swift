@@ -1,9 +1,3 @@
-//
-//  SceneDelegate.swift
-//  TV Shows
-//
-//  Created by Infinum on 06/07/2022.
-//
 
 import UIKit
 
