@@ -7,10 +7,6 @@
 
 import UIKit
 
-struct TVShowItem {
-    let name: String
-    let image: UIImage?
-}
 
 class TitleTableViewCell: UITableViewCell {
 

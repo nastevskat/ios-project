@@ -2,30 +2,38 @@ import UIKit
 import MBProgressHUD
 import Alamofire
 
+
+struct TVShowItem {
+    let name: String
+    let image: UIImage?
+}
+
 final class HomeViewController: UIViewController {
     // MARK: - Private UI
     @IBOutlet private weak var tableView: UITableView!
     
+    
     var authInfo: AuthInfo?
     var shows: [Show] = []
- 
+    
     private let items = [
-           TVShowItem(name: "Fringe", image: nil),
-           TVShowItem(name: "Dexter", image: nil),
-           TVShowItem(name: "The X-Files", image: nil),
-           TVShowItem(name: "The Office", image: nil),
-           TVShowItem(name: "Fringe", image: nil),
-           TVShowItem(name: "Dexter", image: nil),
-           TVShowItem(name: "The X-Files", image: nil),
-           TVShowItem(name: "The Office", image: nil)
-       ]
+        TVShowItem(name: "Fringe", image: nil),
+        TVShowItem(name: "Dexter", image: nil),
+        TVShowItem(name: "The X-Files", image: nil),
+        TVShowItem(name: "The Office", image: nil),
+        TVShowItem(name: "Fringe", image: nil),
+        TVShowItem(name: "Dexter", image: nil),
+        TVShowItem(name: "The X-Files", image: nil),
+        TVShowItem(name: "The Office", image: nil)
+    ]
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+  //      setupTableView()
         title = "Shows"
-        
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 }
 
@@ -37,44 +45,46 @@ extension HomeViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = items[indexPath.row]
         print("Selected Item: \(item)")
+        performSegue(withIdentifier: "toShowDetailsVC", sender: nil)
     }
 }
 
 
 
 extension HomeViewController: UITableViewDataSource {
-
+    
+    
     // MARK: - UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         print("CURRENT INDEX PATH BEING CONFIGURED: \(indexPath)")
-
+        
         let cell = tableView.dequeueReusableCell(
             withIdentifier: String(describing: TitleTableViewCell.self),
             for: indexPath
         ) as! TitleTableViewCell
-            
-            cell.configure(with: items[indexPath.row])
+        
+        cell.configure(with: items[indexPath.row])
         return cell
     }
 }
 
 // MARK: - Private
 private extension HomeViewController {
+    
     func setupTableView() {
-        tableView.estimatedRowHeight = 110
+        tableView.estimatedRowHeight = 11
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableFooterView = UIView()
-        tableView.delegate = self
-        tableView.dataSource = self
+       
     }
 }
 
@@ -137,4 +147,5 @@ func handleSuccesfulLogin(for user: User, headers: [String: String]) {
         return
     }
 }
+
 
