@@ -41,18 +41,18 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
-            let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-
-            if !text.isEmpty{
-                LoginBtn?.isUserInteractionEnabled = true
-                LoginBtn?.alpha = 1.0
-            } else {
-                LoginBtn?.isUserInteractionEnabled = false
-                LoginBtn?.alpha = 0.5
-            }
-            return true
+        
+        let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
+        if !text.isEmpty{
+            LoginBtn?.isUserInteractionEnabled = true
+            LoginBtn?.alpha = 1.0
+        } else {
+            LoginBtn?.isUserInteractionEnabled = false
+            LoginBtn?.alpha = 0.5
         }
+        return true
+    }
     
     
     @IBAction func onRegister() {
