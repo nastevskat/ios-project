@@ -3,67 +3,89 @@ import UIKit
 import MBProgressHUD
 import Alamofire
 
-
-extension UITextField{
-    
-    func setBottomBorder(){
-        self.layer.shadowColor = UIColor.darkGray.cgColor
-        self.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        self.layer.shadowOpacity = 1.0
-        self.layer.shadowRadius = 0.0
+extension UITextField {
+    func addBottomBorder(){
+        let bottomLine = CALayer()
+        bottomLine.frame = CGRect(x: 0, y: self.frame.size.height - 1, width: self.frame.size.width, height: 1)
+        bottomLine.backgroundColor = UIColor.white.cgColor
+        borderStyle = .none
+        layer.addSublayer(bottomLine)
     }
 }
 
-class LoginViewController: UIViewController{
-    
-    
-    @IBOutlet weak var LoginBtn: UIButton!
-    
-    @IBOutlet weak var emailOutlet: UITextField!
-    
-    @IBOutlet weak var PassOutlet: UITextField!
-    
-    @IBOutlet weak var Remember: UIButton!
-    
-    @IBOutlet weak var RegisterBtn: UIButton!
-    
-    @IBAction func onRegister() {
-        alamofireCodableRegisterUserWith(email: emailOutlet.text!, password: PassOutlet.text!)
-        performSegue(withIdentifier: "toHomeVC", sender: nil)
 
-    }
+final class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    @IBAction func onLogin() {
-        loginUserWith(email: emailOutlet.text!, password: PassOutlet.text!)
-        performSegue(withIdentifier: "toHomeVC", sender: nil)
-    }
+    @IBOutlet private weak var LoginBtn: UIButton!
+    @IBOutlet private weak var emailOutlet: UITextField!
+    @IBOutlet private weak var PassOutlet: UITextField!
+    @IBOutlet private weak var Remember: UIButton!
+    @IBOutlet private weak var RegisterBtn: UIButton!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()    }
+    var isChecked = false
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
-    struct UserResponse: Codable {
-        let user: User
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.emailOutlet.addBottomBorder()
+        self.PassOutlet.addBottomBorder()
+        LoginBtn.layer.cornerRadius = 20
+        emailOutlet.delegate = self
+        LoginBtn.isUserInteractionEnabled = false
+        LoginBtn.alpha = 0.5
+        
     }
     
-    struct User: Codable {
-        let email: String
-        let imageUrl: String?
-        let id: String
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+            let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+
+            if !text.isEmpty{
+                LoginBtn?.isUserInteractionEnabled = true
+                LoginBtn?.alpha = 1.0
+            } else {
+                LoginBtn?.isUserInteractionEnabled = false
+                LoginBtn?.alpha = 0.5
+            }
+            return true
+        }
+    
+    
+    @IBAction func onRegister() {
+        registerUserWith(email: "tamaran@infinum.com", password: "infinum1")
+        registerUserWith(email: emailOutlet.text!, password: PassOutlet.text!)
+        performSegue(withIdentifier: "toHomeVC", sender: nil)
         
-        enum CodingKeys: String, CodingKey {
-            case email
-            case imageUrl = "image_url"
-            case id
+    }
+    
+    @IBAction func onLogin() {
+        
+        loginUserWith(email: emailOutlet.text!, password: PassOutlet.text!)
+        performSegue(withIdentifier: "toHomeVC", sender: nil)
+    }
+    
+    
+    @IBAction func onRememberBtn() {
+        if isChecked {
+            isChecked = false
+            Remember.setImage(UIImage(named: "ic-checkbox-selected"), for: .normal)
+        }else{
+            isChecked = true
+            Remember.setImage(UIImage(named: "ic-checkbox-unselected"), for: .normal)
         }
     }
+    
+    
 }
+
 private extension LoginViewController {
     
-    func alamofireCodableRegisterUserWith(email: String, password: String) {
+    func registerUserWith(email: String, password: String) {
+        
         MBProgressHUD.showAdded(to: view, animated: true)
         
         let parameters: [String: String] = [
@@ -86,17 +108,23 @@ private extension LoginViewController {
                 switch dataResponse.result {
                 case .success(let response):
                     print("Success: \(response)")
+                    let headers = dataResponse.response?.headers.dictionary ?? [:]
+                    self.handleSuccesfulLogin(for: response.user, headers: headers)
                 case .failure(let error):
+                    let alertController = UIAlertController(title: "Registration Failed", message: "Something happened try again", preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: "OK", style: .default)
+                    alertController.addAction(OKAction)
+                    self.present(alertController, animated: true)
                     print("Failure: \(error)")
                 }
             }
     }
-    
 }
 
 private extension LoginViewController {
     
     func loginUserWith(email: String, password: String) {
+        
         MBProgressHUD.showAdded(to: view, animated: true)
         
         let parameters: [String: String] = [
@@ -119,19 +147,21 @@ private extension LoginViewController {
                 case .success(let response):
                     print("Success: \(response)")
                 case .failure(let error):
+                    let alertController = UIAlertController(title: "Login Failed", message: "Something happened try again", preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: "OK", style: .default)
+                    alertController.addAction(OKAction)
+                    self.present(alertController, animated: true)
                     print("Failure: \(error)")
                 }
             }
     }
     
-    
-    //        func handleSuccesfulLogin(for user: User, headers: [String: String]) {
-    //            guard let authInfo = try? AuthInfo(headers: headers) else {
-    //                infoLabel.text = "Missing headers"
-    //                return
-    //            }
-    //            infoLabel.text = "\(user)\n\n\(authInfo)"
-    //        }
+    func handleSuccesfulLogin(for user: User, headers: [String: String]) {
+        
+        guard let authInfo = try? AuthInfo(headers: headers) else {
+            return
+        }
+    }
 }
 
 
